@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenQ-Fleet | Quantum-Inspired Green Fleet Optimization</title>
+<link rel="stylesheet" href="/style.css">
+<!-- Chart.js is bundled locally (frontend/assets/chart.umd.js) instead of loaded from a CDN,
+     so the dashboard works even on networks that block external CDNs (common on event wifi). -->
+<script src="/assets/chart.umd.js"></script>
+</head>
+<body>
+
+<div class="bg-fx"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">⚓</div>
+    <div>
+      <div class="brand-title">GreenQ-Fleet</div>
+      <div class="brand-sub">Quantum-Inspired Fuel Prediction &amp; Green Fleet Optimization</div>
+    </div>
+  </div>
+  <div class="brand-tag">SIH26138 · Prototype</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="overview">Overview</button>
+  <button class="tab" data-tab="prediction">Fuel Prediction</button>
+  <button class="tab" data-tab="optimize">Fleet Optimization</button>
+  <button class="tab" data-tab="scenario">Scenario Analysis</button>
+  <button class="tab" data-tab="benchmark">Benchmarking</button>
+</nav>
+
+<main id="app">
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="panel active" id="panel-overview">
+    <div class="hero">
+      <div class="hero-copy">
+        <h1>Minimize fuel, cost, and lifecycle emissions across your fleet.</h1>
+        <p>A quantum-inspired metaheuristic (Q-bit rotation evolutionary search) jointly decides vessel mix,
+          cargo split, cruising speed, alternative fuel choice, and shore power — benchmarked live against
+          classical optimizers so the case for "quantum-inspired" is measured, not assumed.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btn-run-overview">Run Live Demo Comparison</button>
+        </div>
+      </div>
+      <div class="hero-pipeline">
+        <div class="pipe-step"><span>1</span>Operational Data</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><span>2</span>Fuel Prediction (ML)</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step accent"><span>3</span>Quantum-Inspired Optimizer</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><span>4</span>Fleet Deployment Plan</div>
+      </div>
+    </div>
+
+    <div class="kpi-row" id="overview-kpis">
+      <div class="kpi-card"><div class="kpi-label">Status quo fuel</div><div class="kpi-value" id="kpi-baseline-fuel">—</div></div>
+      <div class="kpi-card accent"><div class="kpi-label">Optimized fuel</div><div class="kpi-value" id="kpi-opt-fuel">—</div></div>
+      <div class="kpi-card good"><div class="kpi-label">Fuel reduction</div><div class="kpi-value" id="kpi-fuel-saving">—</div></div>
+      <div class="kpi-card good"><div class="kpi-label">CO₂e reduction</div><div class="kpi-value" id="kpi-co2-saving">—</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Baseline vs Optimized</h3>
+        <canvas id="chart-overview-compare" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3>What makes this "quantum-inspired"?</h3>
+        <p class="muted">Each deployment decision (use vessel, speed, cargo split, fuel choice, shore power) is
+          encoded as a qubit-style probability amplitude. Every generation <em>samples</em> a candidate fleet
+          plan from that probability field, evaluates it, then rotates the whole field toward the best-known
+          plan — steering the entire search distribution at once rather than only surviving individuals, as a
+          classical GA does. It runs on ordinary CPUs; no quantum hardware is required or simulated.</p>
+        <p class="muted">This is validated, not just claimed — see the <b>Benchmarking</b> tab for a live,
+          same-objective comparison against a classical GA, random search, and today's greedy planning
+          approach.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Delivery Table — Expected Deliverables</h3>
+      <div class="table-wrap">
+        <table class="data-table" id="deliverables-table">
+          <thead>
+            <tr><th>#</th><th>Deliverable</th><th>Where it lives in this prototype</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Mathematical modelling of fuel consumption vs. speed, load, distance, sea state and fuel type</td><td><code>backend/data/generate_data.py</code></td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>2</td><td>Data-driven fuel consumption prediction module</td><td><code>backend/prediction/fuel_model.py</code> — Fuel Prediction tab</td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>3</td><td>Quantum-inspired multi-objective optimization engine</td><td><code>backend/optimization/qiga.py</code> — Fleet Optimization tab</td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>4</td><td>Constraint handling — cargo demand, schedule reliability, emissions cap, budget</td><td><code>backend/optimization/objectives.py</code></td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>5</td><td>Alternative fuel &amp; shore power scenario analysis (LNG, methanol, hydrogen, ammonia)</td><td><code>backend/optimization/scenario.py</code> — Scenario Analysis tab</td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>6</td><td>Benchmarking vs. conventional methods — accuracy, convergence, solution quality, scalability</td><td><code>backend/optimization/classical.py</code> — Benchmarking tab</td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>7</td><td>Interactive software platform (UI) for case studies</td><td>This web app (FastAPI + JS frontend)</td><td><span class="pill done">Included</span></td></tr>
+            <tr><td>8</td><td>Real-world AIS / noon-report / bunker-price data integration</td><td>Synthetic data generator is a drop-in placeholder</td><td><span class="pill next">Future work</span></td></tr>
+            <tr><td>9</td><td>Execution on real quantum hardware / QPU-backed QAOA</td><td>Currently classical-hardware quantum-inspired only</td><td><span class="pill next">Future work</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PREDICTION ================= -->
+  <section class="panel" id="panel-prediction">
+    <div class="card">
+      <h3>⛽ Fuel Consumption Prediction</h3>
+      <p class="muted">Gradient-boosted regression trained on operational voyage records. This is deliberately a
+        proven classical ML model — the quantum-inspired contribution of this platform is the optimizer, not
+        the predictor.</p>
+      <div class="form-grid" id="predict-form">
+        <label>Vessel type
+          <select id="pv-vessel"></select>
+        </label>
+        <label>Fuel type
+          <select id="pv-fuel"></select>
+        </label>
+        <label>Sea state
+          <select id="pv-weather">
+            <option>Calm</option><option selected>Moderate</option><option>Rough</option>
+          </select>
+        </label>
+        <label>Speed (knots): <span id="pv-speed-val">16</span>
+          <input type="range" id="pv-speed" min="8" max="24" step="0.5" value="16">
+        </label>
+        <label>Cargo load (t): <span id="pv-load-val">6000</span>
+          <input type="range" id="pv-load" min="100" max="15000" step="100" value="6000">
+        </label>
+        <label>Distance (nm)
+          <input type="number" id="pv-distance" value="1200" min="50" max="5000">
+        </label>
+      </div>
+      <button class="btn btn-primary" id="btn-predict">Predict Fuel Consumption</button>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card accent"><div class="kpi-label">Predicted fuel</div><div class="kpi-value" id="pred-fuel">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Estimated cost</div><div class="kpi-value" id="pred-cost">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Lifecycle CO₂e</div><div class="kpi-value" id="pred-co2">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Voyage time</div><div class="kpi-value" id="pred-time">—</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Model accuracy (holdout set)</h3>
+        <div id="model-metrics" class="metrics-list muted">Loading…</div>
+      </div>
+      <div class="card">
+        <h3>Feature importance</h3>
+        <canvas id="chart-feature-importance" height="220"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OPTIMIZE ================= -->
+  <section class="panel" id="panel-optimize">
+    <div class="card">
+      <h3>⚙️ Green Fleet Optimization</h3>
+      <p class="muted">The quantum-inspired optimizer jointly searches vessel selection, cargo allocation, cruising
+        speed, fuel choice, and shore-power usage to minimize a weighted objective over fuel, cost, and lifecycle
+        emissions — subject to cargo demand, schedule and emissions constraints.</p>
+      <div class="form-grid">
+        <label>Cargo demand (t)
+          <input type="number" id="op-demand" value="20000" min="1000" step="500">
+        </label>
+        <label>Distance (nm)
+          <input type="number" id="op-distance" value="1200" min="50" step="50">
+        </label>
+        <label>Delivery deadline (h)
+          <input type="number" id="op-deadline" value="140" min="12" step="4">
+        </label>
+        <label>Max lifecycle CO₂e (t)
+          <input type="number" id="op-emissions" value="200" min="1" step="5">
+        </label>
+        <label>Fuel weight: <span id="op-wfuel-val">35</span>
+          <input type="range" id="op-wfuel" min="0" max="100" value="35">
+        </label>
+        <label>Cost weight: <span id="op-wcost-val">30</span>
+          <input type="range" id="op-wcost" min="0" max="100" value="30">
+        </label>
+        <label>Emission weight: <span id="op-wemit-val">35</span>
+          <input type="range" id="op-wemit" min="0" max="100" value="35">
+        </label>
+        <label class="checkbox"><input type="checkbox" id="op-altfuels" checked> Allow alternative fuels (LNG / methanol / hydrogen / ammonia)</label>
+        <label class="checkbox"><input type="checkbox" id="op-shore"> Require shore power at berth</label>
+      </div>
+      <button class="btn btn-primary" id="btn-optimize">🚀 Optimize Fleet</button>
+    </div>
+
+    <div id="optimize-results" class="hidden">
+      <div class="kpi-row">
+        <div class="kpi-card accent"><div class="kpi-label">Total fuel</div><div class="kpi-value" id="opt-fuel">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Total cost</div><div class="kpi-value" id="opt-cost">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Lifecycle CO₂e</div><div class="kpi-value" id="opt-co2">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Cargo served</div><div class="kpi-value" id="opt-cargo">—</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Recommended Fleet Deployment Plan</h3>
+          <div class="table-wrap"><table class="data-table" id="opt-table"><thead></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <h3>Convergence (best fitness per generation)</h3>
+          <canvas id="chart-convergence" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Why this plan was selected</h3>
+        <ul id="opt-reasons" class="reason-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCENARIO ================= -->
+  <section class="panel" id="panel-scenario">
+    <div class="card">
+      <h3>🔬 Scenario Analysis — Alternative Fuels &amp; Shore Power</h3>
+      <p class="muted">Runs the same optimizer under five policy-relevant scenarios using the settings from the
+        Fleet Optimization tab, so you can see how the recommended plan shifts.</p>
+      <button class="btn btn-primary" id="btn-scenario">Run Scenario Analysis</button>
+    </div>
+    <div id="scenario-results" class="hidden">
+      <div class="card">
+        <div class="table-wrap"><table class="data-table" id="scenario-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><h3>Fuel (L)</h3><canvas id="chart-scenario-fuel"></canvas></div>
+        <div class="card"><h3>Cost</h3><canvas id="chart-scenario-cost"></canvas></div>
+        <div class="card"><h3>Lifecycle CO₂e (t)</h3><canvas id="chart-scenario-co2"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BENCHMARK ================= -->
+  <section class="panel" id="panel-benchmark">
+    <div class="card">
+      <h3>📈 Benchmarking vs. Conventional Methods</h3>
+      <p class="muted">All methods optimize the <em>identical</em> objective and constraints from the Fleet
+        Optimization tab — only the search strategy differs, so the comparison is fair. Includes the
+        quantum-inspired optimizer, a classical genetic algorithm, pure random search, and today's greedy
+        planning heuristic.</p>
+      <button class="btn btn-primary" id="btn-benchmark">Run Benchmark</button>
+    </div>
+    <div id="benchmark-results" class="hidden">
+      <div class="card">
+        <div class="table-wrap"><table class="data-table" id="benchmark-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3>Solution quality (lower fitness = better)</h3><canvas id="chart-bench-fitness"></canvas></div>
+        <div class="card"><h3>Runtime (seconds)</h3><canvas id="chart-bench-time"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Convergence comparison</h3>
+        <canvas id="chart-bench-convergence" height="220"></canvas>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">GreenQ-Fleet · SIH26138 prototype · Synthetic demo data · Quantum-inspired optimization on classical hardware</footer>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
